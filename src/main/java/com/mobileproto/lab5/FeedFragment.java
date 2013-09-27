@@ -30,6 +30,7 @@ public class FeedFragment extends Fragment {
          * Creating some sample test data to see what the layout looks like.
          * You should eventually delete this.
          */
+        new HttpRequest().execute("http://twitterproto.herokuapp.com/tweets");
         FeedItem item1 = new FeedItem("@TimRyan", "Dear reader, you are reading.");
         FeedItem item2 = new FeedItem("@EvanSimpson", "Hey @TimRyan");
         FeedItem item3 = new FeedItem("@JulianaNazare", "Everything happens so much.");

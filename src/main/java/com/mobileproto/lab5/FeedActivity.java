@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ListView;
 
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FeedActivity extends Activity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,4 +54,8 @@ public class FeedActivity extends Activity {
     }
 
 
+    public static void handleData(String result) {
+        Log.i("result", result);
+
+    }
 }
