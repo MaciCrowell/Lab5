@@ -1,19 +1,32 @@
 package com.mobileproto.lab5;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.app.Activity;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
+import android.widget.EditText;
 import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeedActivity extends Activity {
+
+public class FeedActivity extends Activity{
+
+    public static String userName;
 
 
 
@@ -21,6 +34,32 @@ public class FeedActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.userName = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("userName", "");
+        if (userName.equals("")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("UserName");
+
+            final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+// Set up the buttons
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String userName= input.getText().toString();
+                    FeedActivity.this.userName = userName;
+                    getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                            .edit()
+                            .putString("userName", userName)
+                            .commit();
+                }
+            });
+            builder.show();
+        }
+        Log.i("userName", this.userName);
 
 
         // Define view fragments
@@ -55,7 +94,37 @@ public class FeedActivity extends Activity {
 
 
     public static void handleData(String result) {
-        Log.i("result", result);
+        JSONArray jArray = new JSONArray();
+        ArrayList tweets = new ArrayList();
+        JSONObject  jsonObj = null;
+        try{
+            jsonObj = new JSONObject(result);
+        }catch (JSONException e){
+            Log.i("jsonParse", "error converting string to json object");
+        }
+        try {
+            jArray = jsonObj.getJSONArray("tweets");
+        } catch(JSONException e) {
+            e.printStackTrace();
+            Log.i("jsonParse", "error converting to json array");
+        }
+
+        for (int i=0; i < jArray.length(); i++)
+        {
+
+            try {
+
+                JSONObject tweetObject = jArray.getJSONObject(i);
+                // Pulling items from the array
+                String userName = tweetObject.getString("username");
+                String text = tweetObject.getString("tweet");
+                FeedItem tweet = new FeedItem(userName,text);
+                tweets.add(tweet);
+
+            } catch (JSONException e) {
+                Log.i("jsonParse", "error in iterating");
+            }
+        }
 
     }
 }

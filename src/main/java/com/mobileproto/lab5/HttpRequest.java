@@ -1,5 +1,7 @@
 package com.mobileproto.lab5;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpResponse;
@@ -16,7 +18,14 @@ import java.io.IOException;
 /**
  * Created by mingram on 9/26/13.
  */
-public class HttpRequest extends AsyncTask<String, String, String>{
+public class HttpRequest extends AsyncTask<String, Void, String>{
+    private FeedFragment myFragment;
+
+    public HttpRequest(FeedFragment myFragment) {
+        this.myFragment = myFragment;
+    }
+
+
     @Override
     protected String doInBackground(String... uri){
         HttpClient httpclient = new DefaultHttpClient();
@@ -46,6 +55,6 @@ public class HttpRequest extends AsyncTask<String, String, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        FeedActivity.handleData(result);
+        myFragment.update(result);
     }
 }
