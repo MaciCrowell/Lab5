@@ -18,13 +18,15 @@ import java.util.List;
 /**
  * Created by evan on 9/25/13.
  */
-public class FeedFragment extends Fragment {
-    private List<FeedItem> sampleData;
+public class FeedFragment extends CustomFragment {
+    private List<FeedItem> sampleData = new ArrayList<FeedItem>();
     private FeedListAdapter feedListAdapter;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HttpRequest updateHttpRequest = new HttpRequest(this,"tweet");
+        updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets");
     }
 
     @Override
@@ -37,29 +39,18 @@ public class FeedFragment extends Fragment {
          * Creating some sample test data to see what the layout looks like.
          * You should eventually delete this.
          */
-        HttpRequest updateHttpRequest = new HttpRequest(this);
-        updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets", "hi");
-        FeedItem item1 = new FeedItem("@TimRyan", "Dear reader, you are reading.");
-        FeedItem item2 = new FeedItem("@EvanSimpson", "Hey @TimRyan");
-        FeedItem item3 = new FeedItem("@JulianaNazare", "Everything happens so much.");
-        FeedItem item4 = new FeedItem("@reyner", "dGhlIGNvb2wgbmV3IHRoaW5nIHRvIGRvIGlzIGJhc2U2NCBlY29kZSB5b3VyIHR3ZWV0cw==");
-        this.sampleData = new ArrayList<FeedItem>();
-        sampleData.add(item1);
-        sampleData.add(item2);
-        sampleData.add(item3);
-        sampleData.add(item4);
 
         // Set up the ArrayAdapter for the feedList
         this.feedListAdapter = new FeedListAdapter(this.getActivity(), sampleData);
         ListView feedList = (ListView) v.findViewById(R.id.feedList);
         feedList.setAdapter(feedListAdapter);
 
-
         return v;
 
     }
 
-    public void update(String result){
+    @Override
+    public void updateFromHttp(String result, String type){
         JSONArray jArray = new JSONArray();
         // ArrayList tweets = new ArrayList();
         JSONObject jsonObj = null;

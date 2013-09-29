@@ -19,10 +19,12 @@ import java.io.IOException;
  * Created by mingram on 9/26/13.
  */
 public class HttpRequest extends AsyncTask<String, Void, String>{
-    private FeedFragment myFragment;
+    private CustomFragment myFragment;
+    private String type;
 
-    public HttpRequest(FeedFragment myFragment) {
+    public HttpRequest(CustomFragment myFragment, String type) {
         this.myFragment = myFragment;
+        this.type = type;
     }
 
 
@@ -55,6 +57,6 @@ public class HttpRequest extends AsyncTask<String, Void, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        myFragment.update(result);
+        myFragment.updateFromHttp(result,this.type);
     }
 }
