@@ -21,12 +21,12 @@ import java.util.List;
 public class FeedFragment extends CustomFragment {
     private List<FeedItem> sampleData = new ArrayList<FeedItem>();
     private FeedListAdapter feedListAdapter;
+    private long lastUpdate = 0;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HttpRequest updateHttpRequest = new HttpRequest(this,"tweet");
-        updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets");
+
     }
 
     @Override
@@ -41,48 +41,89 @@ public class FeedFragment extends CustomFragment {
          */
 
         // Set up the ArrayAdapter for the feedList
+
         this.feedListAdapter = new FeedListAdapter(this.getActivity(), sampleData);
         ListView feedList = (ListView) v.findViewById(R.id.feedList);
         feedList.setAdapter(feedListAdapter);
+        if (lastUpdate == 0) {
+            String tweetsJSON = this.getActivity().getSharedPreferences("PREFERENCE", 0).getString("tweets", "");
+            if (!(tweetsJSON.equals(""))){
+                Log.i("loadOld", tweetsJSON);
+                updateFromHttp(tweetsJSON, "tweets");
+            }
+        }
+        if ((System.currentTimeMillis() - lastUpdate) > 60000) {
+            lastUpdate = System.currentTimeMillis();
+            HttpRequest updateHttpRequest = new HttpRequest(this,"tweet");
+            updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets");
+        }
+
 
         return v;
 
     }
 
-    @Override
-    public void updateFromHttp(String result, String type){
-        JSONArray jArray = new JSONArray();
-        // ArrayList tweets = new ArrayList();
-        JSONObject jsonObj = null;
-        try{
-            jsonObj = new JSONObject(result);
-        }catch (JSONException e){
-            Log.i("jsonParse", "error converting string to json object");
-        }
-        try {
-            jArray = jsonObj.getJSONArray("tweets");
-        } catch(JSONException e) {
-            e.printStackTrace();
-            Log.i("jsonParse", "error converting to json array");
-        }
+    public void saveTweets(String result){
+        this.getActivity().getSharedPreferences("PREFERENCE", 0)
+                .edit()
+                .putString("tweets",result)
+                .commit();
+    }
 
-        for (int i=0; i < jArray.length(); i++)
-        {
-
-            try {
-
-                JSONObject tweetObject = jArray.getJSONObject(i);
-                // Pulling items from the array
-                String userName = tweetObject.getString("username");
-                String text = tweetObject.getString("tweet");
-                FeedItem tweet = new FeedItem(userName,text);
-                sampleData.add(tweet);
-
-            } catch (JSONException e) {
-                Log.i("jsonParse", "error in iterating");
+    public boolean checkIfTweetInList(String tweeter, String text){
+        for (int i=0; i < sampleData.size(); i++) {
+            Log.i("jsonParse", sampleData.get(i).getClass().toString());
+            if (sampleData.get(i).getClass().toString().equals("class com.mobileproto.lab5.MentionNotification")){
+                Log.i("jsonParse", "mention in list" + sampleData.get(i).userName);
+                Log.i("jsonParse", "mention " + tweeter);
+                if (sampleData.get(i).userName.equals("@" + tweeter) && sampleData.get(i).text.equals(text)){
+                    Log.i("jsonParse", "true");
+                    return true;
+                }
             }
         }
-        feedListAdapter.notifyDataSetChanged();
+        return false;
+    }
+
+    @Override
+    public void updateFromHttp(String result, String type){
+        if (result != null && !result.isEmpty()) {
+            if (!result.equals("")){
+                saveTweets(result);
+                JSONArray jArray = new JSONArray();
+                // ArrayList tweets = new ArrayList();
+                JSONObject jsonObj = null;
+                try{
+                    jsonObj = new JSONObject(result);
+                }catch (JSONException e){
+                    Log.i("jsonParse", "error converting string to json object");
+                }
+                try {
+                    jArray = jsonObj.getJSONArray("tweets");
+                } catch(JSONException e) {
+                    e.printStackTrace();
+                    Log.i("jsonParse", "error converting to json array");
+                }
+                sampleData.clear();
+                for (int i=0; i < jArray.length(); i++)
+
+
+                    try {
+
+                        JSONObject tweetObject = jArray.getJSONObject(i);
+                        // Pulling items from the array
+                        String userName = tweetObject.getString("username");
+                        String text = tweetObject.getString("tweet");
+                        FeedItem tweet = new FeedItem(userName,text);
+                        sampleData.add(tweet);
+
+                    } catch (JSONException e) {
+                        Log.i("jsonParse", "error in iterating");
+                    }
+                }
+                this.feedListAdapter.notifyDataSetChanged();
+
+            } else {Log.i("jsonParse", "result is null");}
 
     }
 }

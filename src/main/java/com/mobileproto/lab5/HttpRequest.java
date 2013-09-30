@@ -56,7 +56,9 @@ public class HttpRequest extends AsyncTask<String, Void, String>{
 
     @Override
     protected void onPostExecute(String result) {
+        if (result != null) {
         super.onPostExecute(result);
         myFragment.updateFromHttp(result,this.type);
+        }
     }
 }
