@@ -54,6 +54,13 @@ public class FeedFragment extends CustomFragment {
                 Log.i("loadOld", tweetsJSON);
                 updateFromHttp(tweetsJSON, "tweets");
             }
+        }
+
+        if ((System.currentTimeMillis() - lastUpdate) > 60000) {
+            lastUpdate = System.currentTimeMillis();
+            HttpRequest updateHttpRequest = new HttpRequest(this,"tweet");
+            updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets");
+        }
 
 
         feedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -72,26 +79,6 @@ public class FeedFragment extends CustomFragment {
 
     }
 
-    @Override
-    public void updateFromHttp(String result, String type){
-        JSONArray jArray = new JSONArray();
-        // ArrayList tweets = new ArrayList();
-        JSONObject jsonObj = null;
-        try{
-            jsonObj = new JSONObject(result);
-        }catch (JSONException e){
-            Log.i("jsonParse", "error converting string to json object");
-        }
-        if ((System.currentTimeMillis() - lastUpdate) > 60000) {
-            lastUpdate = System.currentTimeMillis();
-            HttpRequest updateHttpRequest = new HttpRequest(this,"tweet");
-            updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets");
-        }
-
-
-        return v;
-
-    }
 
     public void saveTweets(String result){
         this.getActivity().getSharedPreferences("PREFERENCE", 0)
@@ -150,10 +137,10 @@ public class FeedFragment extends CustomFragment {
                     } catch (JSONException e) {
                         Log.i("jsonParse", "error in iterating");
                     }
-                }
-                this.feedListAdapter.notifyDataSetChanged();
+            }
+            this.feedListAdapter.notifyDataSetChanged();
 
-            } else {Log.i("jsonParse", "result is null");}
+        } else {Log.i("jsonParse", "result is null");}
 
     }
 }

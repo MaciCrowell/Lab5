@@ -91,6 +91,8 @@ public class FeedActivity extends Activity{
                 transaction.commit();
                 return true;
             case R.id.refresh:
+
+
                 return true;
 
             default:
