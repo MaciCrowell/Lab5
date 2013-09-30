@@ -72,6 +72,10 @@ public class FeedActivity extends Activity{
 
                 // Commit the transaction
                 transaction.commit();
+                return true;
+            case R.id.refresh:
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -88,11 +92,11 @@ public class FeedActivity extends Activity{
             builder.setTitle("UserName");
 
             final EditText input = new EditText(this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
             builder.setView(input);
 
-// Set up the buttons
+            // Set up the buttons
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -108,7 +112,6 @@ public class FeedActivity extends Activity{
         }
         Log.i("userName", this.userName);
 
-
         // Define view fragments
         FeedFragment feedFragment = new FeedFragment();
         ConnectionFragment connectionFragment = new ConnectionFragment();
@@ -120,7 +123,6 @@ public class FeedActivity extends Activity{
          */
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
 
         ActionBar.Tab feedTab = actionBar.newTab().setText(R.string.tab1);
         feedTab.setTabListener(new NavTabListener(feedFragment));

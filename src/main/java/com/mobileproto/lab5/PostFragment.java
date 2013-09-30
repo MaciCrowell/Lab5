@@ -46,6 +46,7 @@ public class PostFragment extends CustomFragment {
                 String url = "http://twitterproto.herokuapp.com/" + FeedActivity.userName + "/tweets";
                 ArrayList urlParams = new ArrayList<String> ();
                 urlParams.add(url);
+                urlParams.add("tweet");
                 urlParams.add(postString.getText().toString());
                 updateHttpRequest.execute(urlParams);
             }
