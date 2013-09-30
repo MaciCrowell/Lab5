@@ -43,11 +43,14 @@ public class FeedActivity extends Activity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
+        Fragment newFragment;
+        FragmentTransaction transaction;
+
         switch (item.getItemId()) {
             case R.id.new_tweet:
                 // Create new fragment and transaction
-                Fragment newFragment = new PostFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                newFragment = new PostFragment();
+                transaction = getFragmentManager().beginTransaction();
 
                 // Replace whatever is in the fragment_container view with this fragment,
                 // and add the transaction to the back stack
@@ -57,6 +60,18 @@ public class FeedActivity extends Activity{
                 // Commit the transaction
                 transaction.commit();
                 return true;
+            case R.id.follow:
+                // Create new fragment and transaction
+                newFragment = new FollowFragment();
+                transaction = getFragmentManager().beginTransaction();
+
+                // Replace whatever is in the fragment_container view with this fragment,
+                // and add the transaction to the back stack
+                transaction.replace(R.id.fragmentContainer, newFragment);
+                transaction.addToBackStack(null);
+
+                // Commit the transaction
+                transaction.commit();
             default:
                 return super.onOptionsItemSelected(item);
         }

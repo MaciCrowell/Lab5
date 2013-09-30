@@ -41,7 +41,8 @@ public class PostRequest extends AsyncTask<ArrayList, Void, String> {
         HttpClient httpclient = new DefaultHttpClient();
         ArrayList<String> current = uri[0];
         String url = current.get(0);
-        String tweet = current.get(1);
+        String param = current.get(1);
+        String tweet = current.get(2);
         Log.i("Tweet URL", url);
         Log.i("Tweet", tweet);
         HttpResponse response;
@@ -50,7 +51,7 @@ public class PostRequest extends AsyncTask<ArrayList, Void, String> {
             HttpPost httppost = new HttpPost(url);
 
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-            nameValuePairs.add(new BasicNameValuePair("tweet", tweet));
+            nameValuePairs.add(new BasicNameValuePair(param, tweet));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             response = httpclient.execute(httppost);

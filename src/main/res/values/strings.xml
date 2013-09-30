@@ -9,5 +9,6 @@
     <string name="tab3">Search</string>
     <string name="search_button">Search</string>
     <string name="post_button">Post</string>
+    <string name="follow_button">Follow</string>
 
 </resources>
