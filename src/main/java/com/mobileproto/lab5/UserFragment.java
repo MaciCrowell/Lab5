@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import java.util.List;
 public class UserFragment extends CustomFragment {
     private List<FeedItem> searchResults;
     private FeedListAdapter searchListAdapter;
+    public Boolean following = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,48 +51,100 @@ public class UserFragment extends CustomFragment {
         ListView resultsList = (ListView) v.findViewById(R.id.searchResults);
         resultsList.setAdapter(searchListAdapter);
 
-        HttpRequest updateHttpRequest = new HttpRequest(UserFragment.this, "tweet");
+        HttpRequest updateHttpRequest = new HttpRequest(UserFragment.this, "tweets");
         updateHttpRequest.execute("http://twitterproto.herokuapp.com/" + FeedActivity.profile + "/tweets");
+
+        HttpRequest followHttpRequest = new HttpRequest(UserFragment.this, "follow");
+        followHttpRequest.execute("http://twitterproto.herokuapp.com/" + FeedActivity.profile + "/followers");
 
         return v;
     }
 
     @Override
     public void updateFromHttp(String result, String type){
-        Log.i("search", result);
-        JSONArray jArray = new JSONArray();
-        // ArrayList tweets = new ArrayList();
-        JSONObject jsonObj = null;
-        try{
-            jsonObj = new JSONObject(result);
-        }catch (JSONException e){
-            Log.i("jsonParse", "error converting string to json object");
-        }
-        try {
-            jArray = jsonObj.getJSONArray("tweets");
-        } catch(JSONException e) {
-            e.printStackTrace();
-            Log.i("jsonParse", "error converting to json array");
-        }
-        this.searchResults.clear();
-        for (int i=0; i < jArray.length(); i++)
-        {
+        Log.i("String type", type);
 
+        if (type.equals("tweets")) {
+            Log.i("search", result);
+            JSONArray jArray = new JSONArray();
+            // ArrayList tweets = new ArrayList();
+            JSONObject jsonObj = null;
+            try{
+                jsonObj = new JSONObject(result);
+            }catch (JSONException e){
+                Log.i("jsonParse", "error converting string to json object");
+            }
             try {
+                jArray = jsonObj.getJSONArray("tweets");
+            } catch(JSONException e) {
+                e.printStackTrace();
+                Log.i("jsonParse", "error converting to json array");
+            }
+            this.searchResults.clear();
+            for (int i=0; i < jArray.length(); i++)
+            {
 
-                JSONObject tweetObject = jArray.getJSONObject(i);
-                // Pulling items from the array
-                String userName = tweetObject.getString("username");
-                String text = tweetObject.getString("tweet");
-                Log.i("search", text);
-                FeedItem tweet = new FeedItem(userName,text);
-                searchResults.add(tweet);
+                try {
 
-            } catch (JSONException e) {
-                Log.i("jsonParse", "error in iterating");
+                    JSONObject tweetObject = jArray.getJSONObject(i);
+                    // Pulling items from the array
+                    String userName = tweetObject.getString("username");
+                    String text = tweetObject.getString("tweet");
+                    Log.i("search", text);
+                    FeedItem tweet = new FeedItem(userName,text);
+                    searchResults.add(tweet);
+
+                } catch (JSONException e) {
+                    Log.i("jsonParse", "error in iterating");
+                }
+            }
+            searchListAdapter.notifyDataSetChanged();
+        } else {
+
+            //get current user's username
+            String current_user = getActivity().getSharedPreferences("PREFERENCE", 0).getString("userName", "");
+
+            //check if you follow this user
+            Log.i("following", result);
+            JSONArray jArray = new JSONArray();
+            // ArrayList tweets = new ArrayList();
+            JSONObject jsonObj = null;
+            try{
+                jsonObj = new JSONObject(result);
+            }catch (JSONException e){
+                Log.i("jsonParse", "error converting string to json object");
+            }
+            try {
+                jArray = jsonObj.getJSONArray("followers");
+            } catch(JSONException e) {
+                e.printStackTrace();
+                Log.i("jsonParse", "error converting to json array");
+            }
+
+            for (int i=0; i < jArray.length(); i++)
+            {
+
+                try {
+
+                    String userName = jArray.getString(i);
+                    Log.i("User Name", userName);
+                    Log.i("Current User", current_user);
+                    if (userName.equals(current_user)) {
+                        following = true;
+                    }
+
+                } catch (JSONException e) {
+                    Log.i("jsonParse", "error in iterating");
+                }
+            }
+
+            // if the current user is not following the displayed profile
+            // add button to follow user
+            if (following) {
+                ImageView btn = (ImageView) getView().findViewById(R.id.followButton);
+                btn.setImageResource(R.drawable.ic_rating_important);
             }
         }
-        searchListAdapter.notifyDataSetChanged();
 
     }
 }

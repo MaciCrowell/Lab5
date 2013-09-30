@@ -159,39 +159,4 @@ public class FeedActivity extends Activity{
 
     }
 
-
-    public static void handleData(String result) {
-        JSONArray jArray = new JSONArray();
-        ArrayList tweets = new ArrayList();
-        JSONObject  jsonObj = null;
-        try{
-            jsonObj = new JSONObject(result);
-        }catch (JSONException e){
-            Log.i("jsonParse", "error converting string to json object");
-        }
-        try {
-            jArray = jsonObj.getJSONArray("tweets");
-        } catch(JSONException e) {
-            e.printStackTrace();
-            Log.i("jsonParse", "error converting to json array");
-        }
-
-        for (int i=0; i < jArray.length(); i++)
-        {
-
-            try {
-
-                JSONObject tweetObject = jArray.getJSONObject(i);
-                // Pulling items from the array
-                String userName = tweetObject.getString("username");
-                String text = tweetObject.getString("tweet");
-                FeedItem tweet = new FeedItem(userName,text);
-                tweets.add(tweet);
-
-            } catch (JSONException e) {
-                Log.i("jsonParse", "error in iterating");
-            }
-        }
-
-    }
 }
