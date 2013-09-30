@@ -8,5 +8,6 @@
     <string name="tab2">Connections</string>
     <string name="tab3">Search</string>
     <string name="search_button">Search</string>
+    <string name="post_button">Post</string>
 
 </resources>
