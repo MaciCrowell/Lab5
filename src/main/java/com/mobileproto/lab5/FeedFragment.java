@@ -1,12 +1,15 @@
 package com.mobileproto.lab5;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +54,33 @@ public class FeedFragment extends CustomFragment {
                 Log.i("loadOld", tweetsJSON);
                 updateFromHttp(tweetsJSON, "tweets");
             }
+
+
+        feedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                final TextView userName = (TextView) view.findViewById(R.id.feedItemUser);
+                String name = userName.getText().toString();
+
+                ((FeedActivity) getActivity()).openUserProfile(name);
+            }
+        });
+
+        return v;
+
+    }
+
+    @Override
+    public void updateFromHttp(String result, String type){
+        JSONArray jArray = new JSONArray();
+        // ArrayList tweets = new ArrayList();
+        JSONObject jsonObj = null;
+        try{
+            jsonObj = new JSONObject(result);
+        }catch (JSONException e){
+            Log.i("jsonParse", "error converting string to json object");
         }
         if ((System.currentTimeMillis() - lastUpdate) > 60000) {
             lastUpdate = System.currentTimeMillis();
