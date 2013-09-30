@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * Created by evan on 9/26/13.
  */
 public class FollowFragment extends CustomFragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
