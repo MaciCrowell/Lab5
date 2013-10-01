@@ -70,18 +70,31 @@ public class ConnectionFragment extends CustomFragment {
         return v;
     }
 
+    public void refreshFeed() {
+        lastUpdate = System.currentTimeMillis();
+        HttpRequest updateHttpRequest = new HttpRequest(this,"followers");
+        updateHttpRequest.execute("http://twitterproto.herokuapp.com/" + FeedActivity.userName +"/followers");
+        HttpRequest mentionHttpRequest = new HttpRequest(this,"mentions");
+        mentionHttpRequest.execute("http://twitterproto.herokuapp.com/tweets?q=@" + FeedActivity.userName);
+    }
+
     public void saveMentions(String result){
-        this.getActivity().getSharedPreferences("PREFERENCE", 0)
-                .edit()
-                .putString("mentions",result)
-                .commit();
+        if (isAdded()) {
+            this.getActivity().getSharedPreferences("PREFERENCE", 0)
+                    .edit()
+                    .putString("mentions",result)
+                    .commit();
+        }
     }
 
     public void saveFollowers(String result){
-        this.getActivity().getSharedPreferences("PREFERENCE", 0)
-                .edit()
-                .putString("followers",result)
-                .commit();
+        Log.i("saveFollowers",this.toString());
+        if (isAdded()) {
+            this.getActivity().getSharedPreferences("PREFERENCE", 0)
+                    .edit()
+                    .putString("followers",result)
+                    .commit();
+        }
     }
 
     public boolean checkIfFollowerInList(String follower){

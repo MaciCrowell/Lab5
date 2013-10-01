@@ -79,12 +79,20 @@ public class FeedFragment extends CustomFragment {
 
     }
 
+    public void refreshFeed() {
+        Log.i("refresh","refreshFeed");
+        HttpRequest updateHttpRequest = new HttpRequest(this,"tweet");
+        updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets");
+    }
 
     public void saveTweets(String result){
-        this.getActivity().getSharedPreferences("PREFERENCE", 0)
+
+        if (isAdded()) {
+            this.getActivity().getSharedPreferences("PREFERENCE", 0)
                 .edit()
                 .putString("tweets",result)
                 .commit();
+        }
     }
 
     public boolean checkIfTweetInList(String tweeter, String text){

@@ -31,6 +31,10 @@ import java.util.List;
 public class FeedActivity extends Activity{
     public static String userName;
     public static String profile = "";
+    public ActionBar actionBar;
+    public FeedFragment feedFragment = new FeedFragment();
+    public ConnectionFragment connectionFragment = new ConnectionFragment();
+    public SearchFragment searchFragment = new SearchFragment();
 
     public void openUserProfile(String username) {
 
@@ -91,7 +95,9 @@ public class FeedActivity extends Activity{
                 transaction.commit();
                 return true;
             case R.id.refresh:
-
+                Log.i("refresh", "trying to refresh");
+                feedFragment.refreshFeed();
+                connectionFragment.refreshFeed();
 
                 return true;
 
@@ -132,15 +138,15 @@ public class FeedActivity extends Activity{
         Log.i("userName", this.userName);
 
         // Define view fragments
-        FeedFragment feedFragment = new FeedFragment();
-        ConnectionFragment connectionFragment = new ConnectionFragment();
-        SearchFragment searchFragment = new SearchFragment();
+        actionBar = getActionBar();
+        feedFragment = new FeedFragment();
+        connectionFragment = new ConnectionFragment();
+        searchFragment = new SearchFragment();
 
         /*
          *  The following code is used to set up the tabs used for navigation.
          *  You shouldn't need to touch the following code.
          */
-        final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         ActionBar.Tab feedTab = actionBar.newTab().setText(R.string.tab1);

@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,14 @@ public class SearchFragment extends CustomFragment {
                 TextView searchString = (TextView)getView().findViewById(R.id.searchField);
                 HttpRequest updateHttpRequest = new HttpRequest(SearchFragment.this,"tweet");
                 Log.i("search", searchString.getText().toString());
-                updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets?q=" + searchString.getText().toString());
+                //String url = "http://twitterproto.herokuapp.com/tweets?q=" + searchString.getText().toString();
+                try {
+                    String urlE = URLEncoder.encode(searchString.getText().toString(),"UTF-8");
+                    Log.i("searchE", urlE);
+                    updateHttpRequest.execute("http://twitterproto.herokuapp.com/tweets?q=" + urlE);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
