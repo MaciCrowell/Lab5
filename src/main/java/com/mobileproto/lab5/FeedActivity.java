@@ -6,10 +6,17 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -111,6 +118,7 @@ public class FeedActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         this.userName = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("userName", "");
         if (userName.equals("")){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -163,6 +171,8 @@ public class FeedActivity extends Activity{
         actionBar.addTab(searchTab);
 
         actionBar.setStackedBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.android_dark_blue)));
+
+        startService(new Intent(this, NotificationService.class));
 
     }
 }
