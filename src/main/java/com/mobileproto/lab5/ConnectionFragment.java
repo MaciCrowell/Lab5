@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +46,18 @@ public class ConnectionFragment extends CustomFragment {
         connectionListAdapter = new ConnectionListAdapter(this.getActivity(), notifications);
         ListView connectionList = (ListView) v.findViewById(R.id.connectionListView);
         connectionList.setAdapter(connectionListAdapter);
+
+        connectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                final TextView userName = (TextView) view.findViewById(R.id.connectionItemUser);
+                String name = userName.getText().toString().substring(1);
+
+                ((FeedActivity) getActivity()).openUserProfile(name);
+            }
+        });
 
         if (lastUpdate == 0) {
             String followersJSON = this.getActivity().getSharedPreferences("PREFERENCE", 0).getString("followers", "");
