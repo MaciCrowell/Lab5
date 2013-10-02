@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +49,24 @@ public class UserFragment extends CustomFragment {
         TextView name = (TextView) v.findViewById(R.id.userName);
         name.setText("@" + FeedActivity.profile);
 
+        ImageView followBtn = (ImageView) v.findViewById(R.id.followButton);
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageView clickedButton = (ImageView) view;
+                PostRequest updateHttpRequest = new PostRequest(UserFragment.this, "follow");
+                Log.i("user", FeedActivity.profile);
+                String url = "http://twitterproto.herokuapp.com/" + FeedActivity.userName + "/follow";
+                ArrayList urlParams = new ArrayList<String> ();
+                String param = "username";
+                urlParams.add(url);
+                urlParams.add(param);
+                urlParams.add(FeedActivity.profile);
+                clickedButton.setImageResource(R.drawable.ic_rating_important);
+                updateHttpRequest.execute(urlParams);
+            }
+        });
+
         searchResults = new ArrayList<FeedItem>();
         this.searchListAdapter = new FeedListAdapter(this.getActivity(), searchResults);
         ListView resultsList = (ListView) v.findViewById(R.id.searchResults);
@@ -54,7 +75,7 @@ public class UserFragment extends CustomFragment {
         HttpRequest updateHttpRequest = new HttpRequest(UserFragment.this, "tweets");
         updateHttpRequest.execute("http://twitterproto.herokuapp.com/" + FeedActivity.profile + "/tweets");
 
-        HttpRequest followHttpRequest = new HttpRequest(UserFragment.this, "follow");
+        HttpRequest followHttpRequest = new HttpRequest(UserFragment.this, "following");
         followHttpRequest.execute("http://twitterproto.herokuapp.com/" + FeedActivity.profile + "/followers");
 
         return v;
@@ -99,7 +120,7 @@ public class UserFragment extends CustomFragment {
                 }
             }
             searchListAdapter.notifyDataSetChanged();
-        } else {
+        } else if (type.equals("following")) {
 
             //get current user's username
             String current_user = getActivity().getSharedPreferences("PREFERENCE", 0).getString("userName", "");
@@ -144,6 +165,7 @@ public class UserFragment extends CustomFragment {
                 ImageView btn = (ImageView) getView().findViewById(R.id.followButton);
                 btn.setImageResource(R.drawable.ic_rating_important);
             }
+
         }
 
     }
