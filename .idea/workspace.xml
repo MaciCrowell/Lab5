@@ -11,10 +11,7 @@
     </shared>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5370e76-e26c-46e2-8090-a3a44c493422" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/mobileproto/lab5/ConnectionFragment.java" afterPath="$PROJECT_DIR$/src/main/java/com/mobileproto/lab5/ConnectionFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Lab5.iml" afterPath="$PROJECT_DIR$/Lab5.iml" />
-    </list>
+    <list default="true" id="f5370e76-e26c-46e2-8090-a3a44c493422" name="Default" comment="" />
     <ignored path="Lab5.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
