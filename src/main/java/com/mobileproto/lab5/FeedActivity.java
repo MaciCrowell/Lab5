@@ -105,8 +105,31 @@ public class FeedActivity extends Activity{
                 Log.i("refresh", "trying to refresh");
                 feedFragment.refreshFeed();
                 connectionFragment.refreshFeed();
-
                 return true;
+
+            case R.id.action_settings:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("UserName");
+
+                final EditText input = new EditText(this);
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String userName= input.getText().toString();
+                        FeedActivity.this.userName = userName;
+                        getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                                .edit()
+                                .putString("userName", userName)
+                                .commit();
+                    }
+                });
+                builder.show();
+
 
             default:
                 return super.onOptionsItemSelected(item);

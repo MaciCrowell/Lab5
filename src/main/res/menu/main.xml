@@ -3,14 +3,18 @@
           android:icon="@drawable/ic_action_navigation_refresh"
           android:title="Refresh"
           android:showAsAction="ifRoom" />
+    <item android:id="@+id/new_tweet"
+        android:icon="@drawable/ic_action_content_new"
+        android:title="Tweet"
+        android:showAsAction="ifRoom" />
     <item android:id="@+id/follow"
           android:icon="@drawable/ic_action_social_add_person"
           android:title="Follow"
           android:showAsAction="ifRoom" />
-    <item android:id="@+id/new_tweet"
-          android:icon="@drawable/ic_action_content_new"
-          android:title="Tweet"
-          android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_settings"
+        android:icon="@drawable/ic_action_action_settings"
+        android:title="Settings"
+        android:showAsAction="ifRoom" />
 </menu>
 
 
