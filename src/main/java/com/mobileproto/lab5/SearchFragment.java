@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,6 +45,17 @@ public class SearchFragment extends CustomFragment {
         ListView resultsList = (ListView) v.findViewById(R.id.searchResults);
         resultsList.setAdapter(searchListAdapter);
 
+        resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                final TextView userName = (TextView) view.findViewById(R.id.feedItemUser);
+                String name = userName.getText().toString();
+
+                ((FeedActivity) getActivity()).openUserProfile(name);
+            }
+        });
 
         Button search = (Button)v.findViewById(R.id.searchButton);
 
