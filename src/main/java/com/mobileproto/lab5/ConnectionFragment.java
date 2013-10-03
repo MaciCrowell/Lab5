@@ -92,6 +92,14 @@ public class ConnectionFragment extends CustomFragment {
         mentionHttpRequest.execute("http://twitterproto.herokuapp.com/tweets?q=@" + FeedActivity.userName);
     }
 
+    public void silentRefresh() {
+        lastUpdate = System.currentTimeMillis();
+        HttpRequest updateHttpRequest = new HttpRequest(this,"followers_silent");
+        updateHttpRequest.execute("http://twitterproto.herokuapp.com/" + FeedActivity.userName +"/followers");
+        HttpRequest mentionHttpRequest = new HttpRequest(this,"mentions_silent");
+        mentionHttpRequest.execute("http://twitterproto.herokuapp.com/tweets?q=@" + FeedActivity.userName);
+    }
+
     public void saveMentions(String result){
         if (isAdded()) {
             this.getActivity().getSharedPreferences("PREFERENCE", 0)
@@ -148,7 +156,7 @@ public class ConnectionFragment extends CustomFragment {
             }catch (JSONException e){
                 Log.i("jsonParse", "error converting string to json object");
             }
-            if (type.equals("followers")) {
+            if (type.equals("followers") || type.equals("followers_silent")) {
                 saveFollowers(result);
 
                 try {
@@ -175,7 +183,7 @@ public class ConnectionFragment extends CustomFragment {
                         Log.i("jsonParse", "error in iterating");
                     }
                 }
-            } else if (type.equals("mentions")) {
+            } else if (type.equals("mentions") || type.equals("mentions_silent")) {
                 saveMentions(result);
                 try {
                     jArray = jsonObj.getJSONArray("tweets");
@@ -204,7 +212,10 @@ public class ConnectionFragment extends CustomFragment {
                     }
                 }
             }
-            connectionListAdapter.notifyDataSetChanged();
+            if (!type.equals("mentions_silent") && !type.equals("followers_silent")) {
+                connectionListAdapter.notifyDataSetChanged();
+            }
+
         }
     }
 }
