@@ -92,14 +92,6 @@ public class ConnectionFragment extends CustomFragment {
         mentionHttpRequest.execute("http://twitterproto.herokuapp.com/tweets?q=@" + FeedActivity.userName);
     }
 
-    public void silentRefresh() {
-        lastUpdate = System.currentTimeMillis();
-        HttpRequest updateHttpRequest = new HttpRequest(this,"followers_silent");
-        updateHttpRequest.execute("http://twitterproto.herokuapp.com/" + FeedActivity.userName +"/followers");
-        HttpRequest mentionHttpRequest = new HttpRequest(this,"mentions_silent");
-        mentionHttpRequest.execute("http://twitterproto.herokuapp.com/tweets?q=@" + FeedActivity.userName);
-    }
-
     public void saveMentions(String result){
         if (isAdded()) {
             this.getActivity().getSharedPreferences("PREFERENCE", 0)
