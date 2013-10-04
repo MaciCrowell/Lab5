@@ -4,6 +4,7 @@ package com.mobileproto.lab5;
  * Created by mmay on 9/29/13.
  */
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -45,6 +46,11 @@ public class UserFragment extends CustomFragment {
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.user_fragment, null);
+
+        try {
+            ActionBar actionbar = (ActionBar) getActivity().getActionBar();
+            actionbar.selectTab(null);
+        } catch (Exception e) {}
 
         TextView name = (TextView) v.findViewById(R.id.userName);
         name.setText("@" + FeedActivity.profile);

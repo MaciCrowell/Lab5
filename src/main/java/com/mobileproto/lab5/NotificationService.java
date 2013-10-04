@@ -70,7 +70,7 @@ public class NotificationService extends Service {
         };
 
 // schedule the task to run starting now and then every hour...
-        timer.schedule (checkUpdates, 0l, 1000*10);
+        timer.schedule (checkUpdates, 0l, 1000);
 
     }
 
