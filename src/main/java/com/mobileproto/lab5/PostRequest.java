@@ -43,8 +43,6 @@ public class PostRequest extends AsyncTask<ArrayList, Void, String> {
         String url = current.get(0);
         String param = current.get(1);
         String tweet = current.get(2);
-        Log.i("Tweet URL", url);
-        Log.i("Tweet", tweet);
         HttpResponse response;
         String responseString = null;
         try {

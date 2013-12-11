@@ -50,9 +50,9 @@ public class FeedFragment extends CustomFragment {
         feedList.setAdapter(feedListAdapter);
         if (lastUpdate == 0) {
             String tweetsJSON = this.getActivity().getSharedPreferences("PREFERENCE", 0).getString("tweets", "");
-            if (!(tweetsJSON.equals(""))){
-                Log.i("loadOld", tweetsJSON);
-                updateFromHttp(tweetsJSON, "tweets");
+                if (!(tweetsJSON.equals(""))){
+                    Log.i("loadOld", tweetsJSON);
+                    updateFromHttp(tweetsJSON, "tweets");
             }
         }
 
